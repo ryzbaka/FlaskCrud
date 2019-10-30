@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>CRUD APP</title>
+  </head>
+  <body>
+    <div class="banner">
+      Flask-SQLite3 CRUD App
+    </div>
+    <input class="roll-no-box" placeholder="enter roll number here..." />
+    <input class="name-box" placeholder="enter name here..." />
+    <button class="submit-button">Submit</button>
+    <script>//create
+      const submitButton = document.querySelector(".submit-button");
+      submitButton.addEventListener("click", function() {
+        const nameBox = document.querySelector(".name-box");
+        const rollBox = document.querySelector(".roll-no-box");
+        const name = nameBox.value;
+        const rollno = rollBox.value;
+        var object = {
+          rollno: rollno,
+          name: name
+        };
+        const rawResponse = fetch("/send_details", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(object)
+        });
+        rawResponse
+          .then(function(response) {
+            return response.json();
+          })
+          .then(function(data) {
+            console.log(data);
+          });
+      });
+    </script>
+    <div class="view-student">
+      <h2 class='name-result'>Name:</h2>
+      <h2 class='roll-result'>Roll#:</h2>
+      <input class="id-input" placeholder="enter id number here"/>
+      <button class="get-data">Get Details</button>
+      <script>
+        const getDataButton=document.querySelector('.get-data')
+        getDataButton.addEventListener('click',function(){
+          const idInput=document.querySelector('.id-input')
+          const id=idInput.value
+          const rawData=fetch(`/get_student${id}`)
+          rawData.then(function(response){return response.json()}).then(function(data){
+            const nameResult=document.querySelector('.name-result')
+            const rollResult=document.querySelector('.roll-result')
+            nameResult.innerText=`Name:${data["name"]}`
+            rollResult.innerText=`Roll#:${data["rollno"]}`
+          })
+        })
+      </script>
+    </div>
+
+    </div>
+  </body>
+</html>
